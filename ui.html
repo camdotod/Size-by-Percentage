@@ -1,0 +1,413 @@
+<style>
+   body {
+      margin: 0;
+   }
+   #resize-by-percentage {
+      font-family: "Inter";
+      color: var(--figma-color-text);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      box-sizing: border-box;
+   }
+
+   .preview {
+      background-color: var(--figma-color-bg-secondary);
+      height: fit-content;
+      margin: 1rem 0 0 0;
+      border-radius: 12px;
+      padding: 4rem 5rem;
+      flex-grow: 0;
+      display: flex;
+      justify-content: center;
+      min-width: 0;
+      align-self: stretch;
+   }
+   .preview--box {
+      background-color: var(--figma-color-bg-tertiary);
+      width: 160px;
+      height: 160px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid var(--figma-color-bg-secondary);
+   }
+
+   .preview--arrow {
+      border: 1px solid var(--figma-color-border-onselected);
+      width: 0;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+   }
+   #width-arrow {
+      border: 1px solid var(--figma-color-border-onselected);
+      width: 0;
+      align-self: stretch;
+      transform: rotate(90deg);
+      opacity: 0;
+   }
+   #height-arrow {
+      border: 1px solid var(--figma-color-border-onselected);
+      width: 0;
+      align-self: stretch;
+      opacity: 0;
+   }
+
+   .preview--arrow::before {
+      content: "▲";
+      position: relative;
+      display: block;
+      color: var(--figma-color-border-onselected);
+      top: -0.25rem;
+      left: -0.5rem;
+   }
+
+   .preview--arrow::after {
+      content: "▼";
+      position: relative;
+      display: block;
+      color: var(--figma-color-border-onselected);
+      top: 0.25rem;
+      left: -0.5rem;
+   }
+
+   .container {
+      display: flex;
+      justify-content: center;
+      padding: 1rem 1.5rem;
+      gap: 1.5rem;
+   }
+   .controls--wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+   }
+   .controls {
+      display: flex;
+      gap: 0.5rem;
+      width: 140px;
+   }
+   .controls--input {
+      flex-shrink: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 6px 6px 6px 16px;
+      border: 2px solid var(--figma-color-border);
+      border-radius: 0.25rem;
+      color: var(--figma-color-text-selected);
+   }
+
+   .controls--input:hover {
+      border: 2px solid var(--figma-color-border) !important;
+   }
+
+   .controls--input:has(input[type="number"]:focus) {
+      border: 2px solid var(--figma-color-border-selected) !important;
+   }
+
+   .controls--input:has(input[type="number"]:placeholder-shown) {
+      border-color: var(--figma-color-bg);
+      color: var(--figma-color-text-disabled);
+   }
+
+   input[type="number"] {
+      background-color: inherit;
+      border: none;
+      color: var(--figma-color-text);
+      font-family: "Inter";
+      font-size: 1rem;
+      flex-shrink: 1;
+      min-width: 0;
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+   }
+
+   input[type="number"]:focus {
+      outline: none;
+   }
+
+   input[type="number"]::-webkit-inner-spin-button,
+   input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+   }
+
+   input[type="number"]::placeholder {
+      color: var(--figma-color-text-disabled);
+   }
+
+   input[type="number"]:placeholder-shown ~ .controls--percent {
+      opacity: 0;
+   }
+   .controls--percent {
+      margin-left: -1rem;
+      color: var(--figma-color-text);
+   }
+
+   .buttons {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+   }
+   .buttons--button {
+      border-radius: 0.25rem;
+      color: var(--figma-color-text);
+      border: none;
+      background-color: var(--figma-color-bg-secondary);
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-family: "Inter";
+      font-weight: medium;
+   }
+   .buttons--button:hover {
+      background-color: var(--figma-color-bg-selected);
+   }
+   .buttons--button_strong {
+      background-color: var(--figma-color-bg-selected-strong);
+      border: none;
+   }
+   .buttons--button_strong:hover {
+      background-color: var(--figma-color-bg-selected);
+   }
+   .buttons--button_strong:active {
+      background-color: var(--figma-color-bg-selected-pressed);
+   }
+   details {
+      padding: 0.5rem 1.5rem;
+      border-top: 1px solid var(--figma-color-border);
+      color: var(--figma-color-text-tertiary);
+      font-size: 0.9rem;
+      list-style-position: outside;
+   }
+   summary {
+      color: var(--figma-color-text-secondary);
+      margin: 0;
+   }
+   strong {
+      font-weight: 600;
+      text-decoration: underline;
+      color: var(--figma-color-text-secondary);
+   }
+   h3 {
+      font-size: 1rem;
+      color: var(--figma-color-text-secondary);
+      margin: 0;
+      height: fit-content;
+      width: fit-content;
+      display: inline;
+      font-weight: 600;
+   }
+   h4 {
+      font-weight: 600;
+      margin: 0;
+      color: var(--figma-color-text-secondary);
+   }
+   ol {
+      border-top: 1px solid var(--figma-color-border);
+      padding-top: 0.5rem;
+      list-style-position: outside;
+      color: var(--figma-color-text-secondary);
+   }
+   li::marker {
+      font-weight: 600;
+   }
+   hr {
+      opacity: 0.1;
+   }
+</style>
+<div
+   id="resize-by-percentage"
+   class="flex flex-col items-center gap-4 bg-figma-bg text-figma-text font-['Inter'] px-8 py-2">
+   <div
+      id="preview"
+      class="preview w-40 h-40 bg-figma-button-disabled relative rounded-sm peer-has-[:checked]/width:border-t-2 peer-has-[:checked]/height:border-r-2 peer-has-[:checked]/width:border-t-red-600 peer-has-[:checked]/height:border-r-blue-700">
+      <div id="box" class="preview--box">
+         <div id="height-arrow" class="preview--arrow"></div>
+         <div id="width-arrow" class="preview--arrow preview--arrow_vert"></div>
+      </div>
+   </div>
+   <div class="container">
+      <div class="controls--wrapper">
+         <div
+            class="controls peer/width flex gap-2 align-baseline self-stretch py-2">
+            <div id="width-controls" class="controls--input">
+               <label for="percentW" class="controls--label">W</label>
+               <input
+                  id="percentW"
+                  class="text-transparent peer-checked:text-figma-bg rounded-sm w-20 p-1"
+                  placeholder="Width"
+                  type="number"
+                  value=""
+                  min="0"
+                  step="10" />
+               <span class="controls--percent">%</span>
+            </div>
+         </div>
+         <div
+            class="peer/height controls flex gap-2 align-center self-stretch border-b border-figma-text py-2">
+            <div id="height-controls" class="controls--input">
+               <label for="percentH" class="controls--label">H</label>
+               <input
+                  id="percentH"
+                  class="text-transparent peer-checked:text-figma-bg rounded-sm w-20 after:content-['%'] p-1"
+                  type="number"
+                  placeholder="Height"
+                  value=""
+                  min="0"
+                  step="10" />
+               <span class="controls--percent">%</span>
+            </div>
+         </div>
+      </div>
+      <div class="buttons">
+         <button
+            id="resize"
+            class="buttons--button buttons--button_strong px-8 py-2 bg-figma-button hover:bg-figma-button-hover w-fit rounded-sm">
+            Resize
+         </button>
+         <button
+            id="clear"
+            class="buttons--button px-8 py-2 bg-figma-button hover:bg-figma-button-disabled w-fit rounded-sm">
+            Clear
+         </button>
+      </div>
+   </div>
+   <details>
+      <summary><h3>How it Works</h3></summary>
+      <ol>
+         <li>
+            Select
+            <strong>at least</strong>
+            one object
+         </li>
+         <li>Input the amount you wish to resize the object by</li>
+         <li>Click <strong>"Resize"</strong></li>
+      </ol>
+      <hr />
+      <h4>🔲Objects with Parents</h4>
+      <p>
+         If the object is inside another container it will
+         <strong> resize based on the parent dimensions </strong>.
+      </p>
+      <hr />
+      <h4>◻️Objects without Parents</h4>
+      <p>
+         The object will <strong>resize based on its own dimensions.</strong>
+      </p>
+      <hr />
+      <h4>🔗Constrained Proportions</h4>
+      <p>
+         The plugin will preserve this if
+         <strong>only one dimension is set</strong>.
+      </p>
+   </details>
+</div>
+<script>
+   // Helper Functions
+   function toggleWidthPreview(display) {
+      const wArrow = document.getElementById("width-arrow");
+      const box = document.getElementById("box");
+      if (display === true) {
+         wArrow.style.setProperty("opacity", "1");
+         box.style.setProperty(
+            "border-left",
+            "2px solid var(--figma-color-border-selected)"
+         );
+         box.style.setProperty(
+            "border-right",
+            "2px solid var(--figma-color-border-selected)"
+         );
+      } else {
+         wArrow.style.setProperty("opacity", "0");
+         box.style.setProperty(
+            "border-left",
+            "2px solid var(--figma-color-bg-secondary)"
+         );
+         box.style.setProperty(
+            "border-right",
+            "2px solid var(--figma-color-bg-secondary)"
+         );
+      }
+   }
+   function toggleHeightPreview(display) {
+      const hArrow = document.getElementById("height-arrow");
+      const box = document.getElementById("box");
+
+      if (display === true) {
+         hArrow.style.setProperty("opacity", "1");
+         box.style.setProperty(
+            "border-top",
+            "2px solid var(--figma-color-border-selected)"
+         );
+         box.style.setProperty(
+            "border-bottom",
+            "2px solid var(--figma-color-border-selected)"
+         );
+      } else {
+         hArrow.style.setProperty("opacity", "0");
+         box.style.setProperty(
+            "border-top",
+            "2px solid var(--figma-color-bg-secondary)"
+         );
+         box.style.setProperty(
+            "border-bottom",
+            "2px solid var(--figma-color-bg-secondary)"
+         );
+      }
+   }
+   // Event Listeners
+   document.getElementById("percentW").onchange = (e) => {
+      if (Number.isNaN(parseInt(e.target.value))) {
+         toggleWidthPreview(false);
+      } else {
+         toggleWidthPreview(true);
+      }
+   };
+   document.getElementById("percentH").onchange = (e) => {
+      if (Number.isNaN(parseInt(e.target.value))) {
+         toggleHeightPreview(false);
+      } else {
+         toggleHeightPreview(true);
+      }
+   };
+   document.getElementById("resize").onclick = () => {
+      //Validate input values and create variables
+      const percentW = Number.isNaN(
+         parseInt(document.getElementById("percentW").value)
+      )
+         ? -1
+         : parseInt(document.getElementById("percentW").value);
+      const percentH = Number.isNaN(
+         parseInt(document.getElementById("percentH").value)
+      )
+         ? -1
+         : parseInt(document.getElementById("percentH").value);
+      //Set data to code
+      parent.postMessage(
+         {
+            pluginMessage: {
+               type: "resize",
+               percentW,
+               percentH,
+            },
+         },
+         "*"
+      );
+   };
+
+   document.getElementById("clear").onclick = () => {
+      const inputW = document.getElementById("percentW");
+      const inputH = document.getElementById("percentH");
+      inputW.value = "";
+      inputH.value = "";
+      toggleWidthPreview(false);
+      toggleHeightPreview(false);
+      //      parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+   };
+</script>
