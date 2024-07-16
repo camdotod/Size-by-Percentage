@@ -1,8 +1,8 @@
-# Resize By Percentage
-!["Resize by Percentage Icon](https://github.com/camdotod/resize-by-percent-figma-plugin/blob/main/assets/resize-by-percent-icon.png)  
+!["Resize by Percentage Icon](https://github.com/camdotod/resize-by-percent-figma-plugin/blob/main/assets/rpb-1.png)
+---
 A simple design tool for Figma to quickly resize elements by percentage.
 
-🌐 Figma Community Plugin Page: https://www.figma.com/community/plugin/1394135279319666301/resize-by-percentage
+[🌐 Figma Community Plugin Page](https://www.figma.com/community/plugin/1394135279319666301/resize-by-percentage)
 
 ## How it Works
 1. Select at least one object
